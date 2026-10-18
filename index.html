@@ -3,64 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SAP Knowledge Vault</title>
+<title>SAP Link Vault</title>
 <style>
 :root{
   --bg:#f5f6f8;--panel:#ffffff;--ink:#1b1f24;--muted:#6a7280;--line:#e2e5ea;
-  --accent:#0a6ed1;--accent-ink:#ffffff;--soft:#e8f1fb;--danger:#c62828;--card:#ffffff;
+  --accent:#0a6ed1;--accent-ink:#ffffff;--soft:#e8f1fb;--danger:#c62828;--ok:#2e7d32;--card:#ffffff;
   --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#121417;--panel:#1a1d21;--ink:#e8eaed;--muted:#9aa1ab;--line:#2a2f35;
-    --accent:#4da3ff;--accent-ink:#0b1320;--soft:#1c2a3a;--danger:#ef5350;--card:#1f2328;
+    --accent:#4da3ff;--accent-ink:#0b1320;--soft:#1c2a3a;--danger:#ef5350;--ok:#66bb6a;--card:#1f2328;
     --shadow:0 1px 2px rgba(0,0,0,.4);
   }
 }
 :root[data-theme="dark"]{
   --bg:#121417;--panel:#1a1d21;--ink:#e8eaed;--muted:#9aa1ab;--line:#2a2f35;
-  --accent:#4da3ff;--accent-ink:#0b1320;--soft:#1c2a3a;--danger:#ef5350;--card:#1f2328;
+  --accent:#4da3ff;--accent-ink:#0b1320;--soft:#1c2a3a;--danger:#ef5350;--ok:#66bb6a;--card:#1f2328;
   --shadow:0 1px 2px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html,body{margin:0;min-height:100%}
 body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-button,input,textarea{font:inherit;color:inherit}
+button,input{font:inherit;color:inherit}
 button{cursor:pointer}
-.app{display:grid;grid-template-columns:250px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
-header{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
+header{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
 header h1{font-size:17px;margin:0;font-weight:650;flex:1}
 header h1 span{color:var(--accent)}
+.pill{font-size:12px;padding:4px 10px;border-radius:20px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--ok)}
+.pill.err{color:var(--danger)}
 .btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px}
 .btn:hover{border-color:var(--accent)}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.danger{color:var(--danger)}
 .btn.sm{padding:4px 9px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:wait}
 aside{background:var(--panel);border-right:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:8px}
 aside h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:4px 6px}
-.pages{display:flex;flex-direction:column;gap:2px}
-.page-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:none;background:none;text-align:left;width:100%}
-.page-item:hover{background:var(--soft)}
-.page-item.active{background:var(--soft);color:var(--accent);font-weight:600}
-.page-item .count{margin-left:auto;font-size:12px;color:var(--muted)}
+.cats{display:flex;flex-direction:column;gap:2px}
+.cat{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:none;background:none;text-align:left;width:100%}
+.cat:hover{background:var(--soft)}
+.cat.active{background:var(--soft);color:var(--accent);font-weight:600}
+.cat .count{margin-left:auto;font-size:12px;color:var(--muted)}
 main{padding:22px 26px;min-width:0}
-.page-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.page-head h2{margin:0;font-size:22px;flex:1;min-width:0;overflow-wrap:anywhere}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px}
-.tab{border:none;background:none;padding:9px 14px;border-bottom:2px solid transparent;color:var(--muted)}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.search{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
-.drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);background:var(--panel);margin-bottom:18px;transition:.15s}
-.drop.over{border-color:var(--accent);background:var(--soft);color:var(--accent)}
-.drop strong{color:var(--ink)}
-.files{display:flex;flex-direction:column;gap:8px}
-.file{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:10px}
-.ext{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--soft);color:var(--accent);flex:none;text-transform:uppercase}
-.file .meta{flex:1;min-width:0}
-.file .name{font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.file .sub{font-size:12px;color:var(--muted)}
-.file .actions{display:flex;gap:6px;flex-wrap:wrap}
+.head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.head h2{margin:0;font-size:22px;flex:1;min-width:0;overflow-wrap:anywhere}
+.search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);margin-bottom:16px}
 .linkform{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;margin-bottom:18px;background:var(--panel);padding:12px;border:1px solid var(--line);border-radius:12px}
 .linkform input{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);min-width:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
@@ -70,360 +60,330 @@ main{padding:22px 26px;min-width:0}
 .block h3{margin:0;font-size:16px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 .block .note{font-size:13px;color:var(--muted);margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .block .domain{margin-top:auto;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.block .tag{font-size:11px;color:var(--accent);margin-bottom:4px}
 .block a.cover{position:absolute;inset:0;border-radius:14px;z-index:1}
 .block .x{position:absolute;top:8px;right:8px;z-index:2;border:none;background:var(--bg);color:var(--muted);width:26px;height:26px;border-radius:50%;opacity:0;transition:.12s}
 .block:hover .x,.block .x:focus{opacity:1}
 .block .x:hover{color:var(--danger)}
-.badge{position:absolute;top:10px;right:10px;font-size:10px;text-transform:uppercase;letter-spacing:.05em;background:var(--soft);color:var(--accent);padding:2px 7px;border-radius:10px}
-.empty{color:var(--muted);text-align:center;padding:40px 10px}
-.foot{margin-top:auto;font-size:12px;color:var(--muted);padding:6px}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:10}
+.empty{color:var(--muted);text-align:center;padding:40px 10px;grid-column:1/-1}
+.banner{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:14px}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);padding:22px;width:min(520px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 6px}
+dialog label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
+dialog input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+dialog .row{display:grid;grid-template-columns:1fr 1fr 110px;gap:8px}
+dialog .row label{margin-top:12px}
+dialog .help{font-size:13px;color:var(--muted);line-height:1.5}
+dialog .help ol{padding-left:18px;margin:8px 0}
+dialog .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:10;max-width:90vw}
 .toast.show{opacity:1}
+.editor-only{display:none}
+body.can-edit .editor-only{display:revert}
+body.can-edit .linkform.editor-only{display:grid}
 @media (max-width:760px){
   .app{grid-template-columns:1fr}
   aside{border-right:none;border-bottom:1px solid var(--line)}
-  .pages{flex-direction:row;overflow-x:auto}
-  .page-item{white-space:nowrap;width:auto}
-  .foot{display:none}
+  .cats{flex-direction:row;overflow-x:auto}
+  .cat{white-space:nowrap;width:auto}
   main{padding:16px}
-  header{padding:10px 16px;flex-wrap:wrap}
-  .linkform{grid-template-columns:1fr}
+  header{padding:10px 16px}
+  body.can-edit .linkform.editor-only{grid-template-columns:1fr}
   .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
   .block .x{opacity:1}
+  dialog .row{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <h1>SAP <span>Knowledge Vault</span></h1>
-    <button class="btn sm" id="exportBtn" title="Download a backup of everything">Export</button>
-    <button class="btn sm" id="importBtn" title="Restore from a backup file">Import</button>
+    <h1>SAP <span>Link Vault</span></h1>
+    <span class="pill" id="status">Loading…</span>
+    <button class="btn sm" id="refreshBtn" title="Reload links from GitHub">↻</button>
+    <button class="btn sm" id="settingsBtn">Connect GitHub</button>
     <button class="btn sm" id="themeBtn" title="Toggle theme">◐</button>
-    <input type="file" id="importInput" accept=".json" hidden>
   </header>
 
   <aside>
-    <h2>Pages</h2>
-    <div class="pages" id="pageList"></div>
-    <button class="btn primary" id="newPageBtn">+ New page</button>
-    <div class="foot" id="storageInfo"></div>
+    <h2>Folders</h2>
+    <div class="cats" id="catList"></div>
+    <button class="btn primary editor-only" id="newCatBtn">+ New folder</button>
   </aside>
 
-  <main id="main"></main>
+  <main>
+    <div class="head">
+      <h2 id="title">All links</h2>
+      <button class="btn sm editor-only" id="renameCatBtn">Rename</button>
+      <button class="btn sm danger editor-only" id="deleteCatBtn">Delete folder</button>
+    </div>
+    <div id="banner"></div>
+    <form class="linkform editor-only" id="linkForm">
+      <input id="lTitle" placeholder="Title (shown on the block)" required>
+      <input id="lUrl" type="url" placeholder="https://community.sap.com/t5/..." required>
+      <input id="lNote" placeholder="Short note (optional)">
+      <button class="btn primary" type="submit" id="addBtn">Add link</button>
+    </form>
+    <input class="search" id="search" placeholder="Search links…">
+    <div class="grid" id="grid"></div>
+  </main>
 </div>
+
+<dialog id="settings">
+  <h3>Connect to GitHub</h3>
+  <div class="help">
+    Links are saved to <code>links.json</code> in your repository so they show up for everyone, on every device.
+    To <strong>add or delete</strong> links you need a token. Viewing needs nothing.
+    <ol>
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Fine-grained token</a>.</li>
+      <li>Repository access: <strong>Only select repositories</strong> → pick this repo.</li>
+      <li>Permissions → Repository → <strong>Contents: Read and write</strong>. Generate and paste below.</li>
+    </ol>
+    The token stays only in this browser. Never put it inside the HTML file.
+  </div>
+  <div class="row">
+    <div><label for="sOwner">GitHub username</label><input id="sOwner" autocomplete="off"></div>
+    <div><label for="sRepo">Repository</label><input id="sRepo" autocomplete="off"></div>
+    <div><label for="sBranch">Branch</label><input id="sBranch" autocomplete="off"></div>
+  </div>
+  <label for="sToken">Access token</label>
+  <input id="sToken" type="password" placeholder="github_pat_…" autocomplete="off">
+  <div class="actions">
+    <button class="btn danger" id="forgetBtn" type="button">Forget token</button>
+    <button class="btn" id="cancelBtn" type="button">Cancel</button>
+    <button class="btn primary" id="saveSettingsBtn" type="button">Save &amp; connect</button>
+  </div>
+</dialog>
+
 <div class="toast" id="toast"></div>
 
 <script>
-/* ================================================================
-   PUBLISHED LINKS — edit this list in GitHub to make links visible
-   to EVERYONE who opens the site. Links added through the page UI
-   are saved only in your own browser.
-   "page" = page name (created automatically if it doesn't exist).
-   ================================================================ */
-const PUBLISHED = [
-  { page: "SAP Community", title: "SAP Community – Home", url: "https://community.sap.com/", note: "Main community hub" },
-  // { page: "SAP Community", title: "My favourite blog post", url: "https://community.sap.com/t5/...", note: "" },
-];
+/* ---------------- Settings ---------------- */
+const DATA_PATH = "links.json";
+const LS_KEY = "sap-link-vault-settings";
 
-/* ---------------- IndexedDB helpers ---------------- */
-const DB_NAME = "sap-knowledge-vault", DB_VER = 1;
-let db;
-function openDB(){
-  return new Promise((res, rej) => {
-    const r = indexedDB.open(DB_NAME, DB_VER);
-    r.onupgradeneeded = () => {
-      const d = r.result;
-      if (!d.objectStoreNames.contains("pages")) d.createObjectStore("pages", { keyPath: "id" });
-      for (const s of ["files", "links"]) {
-        if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: "id" }).createIndex("pageId", "pageId");
-      }
-    };
-    r.onsuccess = () => res(r.result);
-    r.onerror = () => rej(r.error);
-  });
+function detectRepo(){
+  const h = location.hostname;
+  if (!h.endsWith(".github.io")) return {};
+  const owner = h.split(".")[0];
+  const seg = location.pathname.split("/").filter(Boolean)[0];
+  const repo = seg && !seg.endsWith(".html") ? seg : `${owner}.github.io`;
+  return { owner, repo };
 }
-const store = (s, mode = "readonly") => db.transaction(s, mode).objectStore(s);
-const wrap = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-const getAll = s => wrap(store(s).getAll());
-const put = (s, v) => wrap(store(s, "readwrite").put(v));
-const del = (s, id) => wrap(store(s, "readwrite").delete(id));
-const byPage = (s, pid) => wrap(store(s).index("pageId").getAll(pid));
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+function loadSettings(){
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch {}
+  const d = detectRepo();
+  return { owner: saved.owner || d.owner || "", repo: saved.repo || d.repo || "", branch: saved.branch || "main", token: saved.token || "" };
+}
+function saveSettings(s){ try { localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch {} }
+let S = loadSettings();
 
 /* ---------------- Utils ---------------- */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-const fmtSize = b => b < 1024 ? b + " B" : b < 1048576 ? (b/1024).toFixed(1) + " KB" : (b/1048576).toFixed(1) + " MB";
-const fmtDate = t => new Date(t).toLocaleDateString(undefined, { day:"numeric", month:"short", year:"numeric" });
-const extOf = n => (n.includes(".") ? n.split(".").pop() : "file").slice(0, 4);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const domainOf = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return u; } };
-function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200); }
+const b64enc = s => { const b = new TextEncoder().encode(s); let bin = ""; for (const x of b) bin += String.fromCharCode(x); return btoa(bin); };
+const b64dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, "")), c => c.charCodeAt(0)));
+function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2600); }
+function status(text, kind = ""){ const p = $("status"); p.textContent = text; p.className = "pill " + kind; }
 
-/* ---------------- State ---------------- */
-let pages = [], currentId = null, tab = "docs", query = "";
-try { tab = localStorage.getItem("vault-tab") || "docs"; } catch {}
-
-async function loadPages(){
-  pages = (await getAll("pages")).sort((a, b) => a.created - b.created);
+/* ---------------- GitHub API ---------------- */
+function gh(path, opts = {}){
+  const headers = { Accept: "application/vnd.github+json" };
+  if (S.token) headers.Authorization = "Bearer " + S.token;
+  if (opts.body) headers["Content-Type"] = "application/json";
+  return fetch(`https://api.github.com/repos/${S.owner}/${S.repo}/${path}`, { cache: "no-store", ...opts, headers });
 }
 
-async function ensurePublishedPages(){
-  const names = [...new Set(PUBLISHED.map(l => l.page))];
-  for (const name of names) {
-    if (!pages.some(p => p.name === name)) {
-      const p = { id: uid(), name, created: Date.now() };
-      await put("pages", p); pages.push(p);
-    }
-  }
-  if (!pages.length) {
-    const p = { id: uid(), name: "General", created: Date.now() };
-    await put("pages", p); pages.push(p);
-  }
+/* ---------------- Data ---------------- */
+let data = { categories: ["SAP Community"], links: [] };
+let sha = null;
+let current = "__all__";
+let query = "";
+
+function normalize(d){
+  const out = { categories: Array.isArray(d?.categories) ? d.categories.filter(Boolean) : [], links: Array.isArray(d?.links) ? d.links : [] };
+  for (const l of out.links) if (l.category && !out.categories.includes(l.category)) out.categories.push(l.category);
+  if (!out.categories.length) out.categories.push("SAP Community");
+  return out;
 }
 
-/* ---------------- Sidebar ---------------- */
-async function renderPages(){
-  const list = $("pageList");
-  const counts = await Promise.all(pages.map(async p => {
-    const [f, l] = await Promise.all([byPage("files", p.id), byPage("links", p.id)]);
-    return f.length + l.length + PUBLISHED.filter(x => x.page === p.name).length;
-  }));
-  list.innerHTML = pages.map((p, i) =>
-    `<button class="page-item ${p.id === currentId ? "active" : ""}" data-id="${p.id}">
-       <span>📁</span><span>${esc(p.name)}</span><span class="count">${counts[i]}</span>
-     </button>`).join("");
-  list.querySelectorAll(".page-item").forEach(b => b.onclick = () => { currentId = b.dataset.id; query = ""; render(); });
+// Reads from the GitHub API (fresh). Returns true on success.
+async function loadFromApi(){
+  if (!S.owner || !S.repo) return false;
+  const r = await gh(`contents/${DATA_PATH}?ref=${encodeURIComponent(S.branch)}`);
+  if (r.status === 404) { data = normalize({}); sha = null; return true; }
+  if (!r.ok) throw new Error(`GitHub ${r.status}`);
+  const j = await r.json();
+  sha = j.sha;
+  data = normalize(JSON.parse(b64dec(j.content)));
+  return true;
 }
 
-/* ---------------- Main ---------------- */
-async function renderMain(){
-  const page = pages.find(p => p.id === currentId);
-  const main = $("main");
-  if (!page) { main.innerHTML = `<div class="empty">Create a page to get started.</div>`; return; }
-
-  main.innerHTML = `
-    <div class="page-head">
-      <h2>${esc(page.name)}</h2>
-      <button class="btn sm" id="renameBtn">Rename</button>
-      <button class="btn sm danger" id="deletePageBtn">Delete page</button>
-    </div>
-    <div class="tabs">
-      <button class="tab ${tab === "docs" ? "active" : ""}" data-tab="docs">Documents</button>
-      <button class="tab ${tab === "links" ? "active" : ""}" data-tab="links">SAP Links</button>
-    </div>
-    <div class="toolbar"><input class="search" id="search" placeholder="Search this page…" value="${esc(query)}"></div>
-    <div id="tabBody"></div>`;
-
-  $("renameBtn").onclick = async () => {
-    const name = prompt("Rename page:", page.name);
-    if (name && name.trim()) { page.name = name.trim(); await put("pages", page); render(); }
-  };
-  $("deletePageBtn").onclick = async () => {
-    if (!confirm(`Delete "${page.name}" and everything in it? This can't be undone.`)) return;
-    for (const s of ["files", "links"]) for (const x of await byPage(s, page.id)) await del(s, x.id);
-    await del("pages", page.id);
-    pages = pages.filter(p => p.id !== page.id);
-    currentId = pages[0]?.id || null;
-    render(); toast("Page deleted");
-  };
-  main.querySelectorAll(".tab").forEach(t => t.onclick = () => {
-    tab = t.dataset.tab; try { localStorage.setItem("vault-tab", tab); } catch {}
-    renderMain();
-  });
-  const s = $("search");
-  s.oninput = () => { query = s.value; renderTab(page); };
-
-  renderTab(page);
-}
-
-async function renderTab(page){
-  if (tab === "docs") return renderDocs(page);
-  return renderLinks(page);
-}
-
-/* ---------------- Documents ---------------- */
-async function renderDocs(page){
-  const body = $("tabBody");
-  const q = query.toLowerCase();
-  const files = (await byPage("files", page.id))
-    .filter(f => f.name.toLowerCase().includes(q))
-    .sort((a, b) => b.added - a.added);
-
-  body.innerHTML = `
-    <label class="drop" id="drop">
-      <strong>Drop files here</strong> or click to browse<br>
-      <small>Any file type — PDF, Word, Excel, images, ZIP…</small>
-      <input type="file" id="fileInput" multiple hidden>
-    </label>
-    <div class="files">
-      ${files.length ? files.map(f => `
-        <div class="file">
-          <div class="ext">${esc(extOf(f.name))}</div>
-          <div class="meta">
-            <div class="name" title="${esc(f.name)}">${esc(f.name)}</div>
-            <div class="sub">${fmtSize(f.size)} · ${fmtDate(f.added)}</div>
-          </div>
-          <div class="actions">
-            <button class="btn sm" data-open="${f.id}">Open</button>
-            <button class="btn sm" data-dl="${f.id}">Download</button>
-            <button class="btn sm danger" data-del="${f.id}">Delete</button>
-          </div>
-        </div>`).join("") : `<div class="empty">${q ? "No documents match your search." : "No documents yet."}</div>`}
-    </div>`;
-
-  const drop = $("drop"), input = $("fileInput");
-  input.onchange = () => addFiles(page, input.files);
-  ["dragenter", "dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
-  ["dragleave", "drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
-  drop.addEventListener("drop", ev => addFiles(page, ev.dataTransfer.files));
-
-  const find = id => files.find(f => f.id === id);
-  body.querySelectorAll("[data-open]").forEach(b => b.onclick = () => {
-    const f = find(b.dataset.open);
-    const url = URL.createObjectURL(f.blob);
-    window.open(url, "_blank", "noopener");
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  });
-  body.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => {
-    const f = find(b.dataset.dl);
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(f.blob); a.download = f.name; a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-  });
-  body.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
-    const f = find(b.dataset.del);
-    if (!confirm(`Delete "${f.name}"?`)) return;
-    await del("files", f.id); renderDocs(page); renderPages(); updateStorage();
-  });
-}
-
-async function addFiles(page, list){
-  const arr = [...list];
-  if (!arr.length) return;
-  for (const file of arr) {
-    await put("files", { id: uid(), pageId: page.id, name: file.name, type: file.type, size: file.size, blob: file, added: Date.now() });
-  }
-  toast(`${arr.length} file${arr.length > 1 ? "s" : ""} added`);
-  renderDocs(page); renderPages(); updateStorage();
-}
-
-/* ---------------- Links ---------------- */
-async function renderLinks(page){
-  const body = $("tabBody");
-  const q = query.toLowerCase();
-  const pinned = PUBLISHED.filter(l => l.page === page.name).map((l, i) => ({ ...l, id: "pub" + i, pinned: true }));
-  const mine = (await byPage("links", page.id)).sort((a, b) => b.added - a.added);
-  const links = [...pinned, ...mine].filter(l =>
-    (l.title + " " + l.url + " " + (l.note || "")).toLowerCase().includes(q));
-
-  body.innerHTML = `
-    <form class="linkform" id="linkForm">
-      <input id="lTitle" placeholder="Title (shown on the block)" required>
-      <input id="lUrl" type="url" placeholder="https://community.sap.com/t5/..." required>
-      <input id="lNote" placeholder="Short note (optional)">
-      <button class="btn primary" type="submit">Add link</button>
-    </form>
-    <div class="grid">
-      ${links.length ? links.map(l => `
-        <div class="block">
-          <div class="bar"></div>
-          <h3>${esc(l.title)}</h3>
-          ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
-          <div class="domain">${esc(domainOf(l.url))}</div>
-          <a class="cover" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(l.title)}"></a>
-          ${l.pinned ? `<span class="badge" title="Defined in the HTML file — visible to everyone">pinned</span>`
-                     : `<button class="x" data-del="${l.id}" title="Remove link">✕</button>`}
-        </div>`).join("") : `<div class="empty">${q ? "No links match your search." : "No links yet. Add your first SAP Community blog above."}</div>`}
-    </div>`;
-
-  $("linkForm").onsubmit = async e => {
-    e.preventDefault();
-    const url = $("lUrl").value.trim();
-    if (!/^https?:\/\//i.test(url)) { toast("URL must start with http:// or https://"); return; }
-    await put("links", { id: uid(), pageId: page.id, title: $("lTitle").value.trim(), url, note: $("lNote").value.trim(), added: Date.now() });
-    toast("Link added"); renderLinks(page); renderPages();
-  };
-  body.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
-    if (!confirm("Remove this link?")) return;
-    await del("links", b.dataset.del); renderLinks(page); renderPages();
-  });
-}
-
-/* ---------------- Export / Import ---------------- */
-const blobToDataURL = b => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); });
-
-$("exportBtn").onclick = async () => {
-  toast("Preparing backup…");
-  const files = await getAll("files");
-  const data = {
-    app: "sap-knowledge-vault", version: 1, exported: new Date().toISOString(),
-    pages: await getAll("pages"),
-    links: await getAll("links"),
-    files: await Promise.all(files.map(async f => ({ ...f, blob: undefined, data: await blobToDataURL(f.blob) })))
-  };
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: "application/json" }));
-  a.download = `vault-backup-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-};
-
-$("importBtn").onclick = () => $("importInput").click();
-$("importInput").onchange = async e => {
-  const file = e.target.files[0]; if (!file) return;
+async function load(){
+  status("Loading…");
   try {
-    const data = JSON.parse(await file.text());
-    if (data.app !== "sap-knowledge-vault") throw new Error("Not a vault backup");
-    for (const p of data.pages || []) await put("pages", p);
-    for (const l of data.links || []) await put("links", l);
-    for (const f of data.files || []) {
-      const blob = await (await fetch(f.data)).blob();
-      const { data: _, ...rest } = f;
-      await put("files", { ...rest, blob });
-    }
-    await loadPages(); currentId = currentId || pages[0]?.id;
-    render(); updateStorage(); toast("Backup restored");
-  } catch (err) { toast("Import failed: " + err.message); }
-  e.target.value = "";
+    if (await loadFromApi()) { render(); status(S.token ? "Connected · can edit" : "View only", S.token ? "ok" : ""); return; }
+  } catch (e) { console.warn(e); }
+  // Fallback: the copy GitHub Pages serves (may lag a minute behind)
+  try {
+    const r = await fetch(`${DATA_PATH}?t=${Date.now()}`, { cache: "no-store" });
+    if (r.ok) { data = normalize(await r.json()); render(); status("View only (cached)"); return; }
+  } catch {}
+  render();
+  status(S.owner ? "Couldn't reach GitHub" : "Not set up", "err");
+}
+
+// Pull latest → apply change → commit. Retries once if someone else saved meanwhile.
+async function commit(mutate, message){
+  if (!S.token) { openSettings(); return false; }
+  status("Saving…");
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await loadFromApi();
+    mutate(data);
+    const body = { message, content: b64enc(JSON.stringify(data, null, 2) + "\n"), branch: S.branch };
+    if (sha) body.sha = sha;
+    const r = await gh(`contents/${DATA_PATH}`, { method: "PUT", body: JSON.stringify(body) });
+    if (r.ok) { sha = (await r.json()).content.sha; render(); status("Saved to GitHub", "ok"); return true; }
+    if ((r.status === 409 || r.status === 422) && attempt === 0) continue;
+    const msg = r.status === 401 ? "Token invalid or expired" : r.status === 403 || r.status === 404 ? "Token lacks write access to this repo" : `Save failed (${r.status})`;
+    status(msg, "err"); toast(msg); await load(); return false;
+  }
+}
+
+/* ---------------- Render ---------------- */
+function render(){
+  document.body.classList.toggle("can-edit", !!S.token);
+  if (current !== "__all__" && !data.categories.includes(current)) current = "__all__";
+
+  const counts = c => data.links.filter(l => l.category === c).length;
+  $("catList").innerHTML =
+    `<button class="cat ${current === "__all__" ? "active" : ""}" data-c="__all__"><span>★</span><span>All links</span><span class="count">${data.links.length}</span></button>` +
+    data.categories.map(c => `<button class="cat ${c === current ? "active" : ""}" data-c="${esc(c)}"><span>📁</span><span>${esc(c)}</span><span class="count">${counts(c)}</span></button>`).join("");
+  $("catList").querySelectorAll(".cat").forEach(b => b.onclick = () => { current = b.dataset.c; render(); });
+
+  const isAll = current === "__all__";
+  $("title").textContent = isAll ? "All links" : current;
+  $("renameCatBtn").style.display = isAll ? "none" : "";
+  $("deleteCatBtn").style.display = isAll ? "none" : "";
+
+  $("banner").innerHTML = !S.owner
+    ? `<div class="banner">Open this page from your GitHub Pages address, or click <strong>Connect GitHub</strong> to set your username and repository.</div>`
+    : !S.token ? `<div class="banner">You're viewing. To add links, click <strong>Connect GitHub</strong> and paste your access token (one-time per device).</div>` : "";
+
+  const q = query.toLowerCase();
+  const links = data.links
+    .filter(l => isAll || l.category === current)
+    .filter(l => (l.title + " " + l.url + " " + (l.note || "")).toLowerCase().includes(q))
+    .sort((a, b) => (b.added || 0) - (a.added || 0));
+
+  $("grid").innerHTML = links.length ? links.map(l => `
+    <div class="block">
+      <div class="bar"></div>
+      ${isAll ? `<div class="tag">${esc(l.category)}</div>` : ""}
+      <h3>${esc(l.title)}</h3>
+      ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
+      <div class="domain">${esc(domainOf(l.url))}</div>
+      <a class="cover" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(l.title)}"></a>
+      ${S.token ? `<button class="x" data-del="${esc(l.id)}" title="Delete link">✕</button>` : ""}
+    </div>`).join("")
+    : `<div class="empty">${q ? "No links match your search." : "No links here yet."}</div>`;
+
+  $("grid").querySelectorAll("[data-del]").forEach(b => b.onclick = async e => {
+    e.preventDefault();
+    if (!confirm("Delete this link for everyone?")) return;
+    const id = b.dataset.del;
+    await commit(d => { d.links = d.links.filter(l => l.id !== id); }, "Delete link");
+  });
+}
+
+/* ---------------- Actions ---------------- */
+$("search").oninput = e => { query = e.target.value; render(); };
+
+$("linkForm").onsubmit = async e => {
+  e.preventDefault();
+  const url = $("lUrl").value.trim();
+  if (!/^https?:\/\//i.test(url)) { toast("URL must start with http:// or https://"); return; }
+  const cat = current === "__all__" ? data.categories[0] : current;
+  const link = { id: uid(), category: cat, title: $("lTitle").value.trim(), url, note: $("lNote").value.trim(), added: Date.now() };
+  $("addBtn").disabled = true;
+  const ok = await commit(d => {
+    if (!d.categories.includes(cat)) d.categories.push(cat);
+    if (!d.links.some(l => l.id === link.id)) d.links.push(link);
+  }, `Add link: ${link.title}`);
+  $("addBtn").disabled = false;
+  if (ok) { e.target.reset(); toast(`Added to "${cat}"`); }
 };
 
-/* ---------------- New page / theme / storage ---------------- */
-$("newPageBtn").onclick = async () => {
-  const name = prompt("Page name:");
-  if (!name || !name.trim()) return;
-  const p = { id: uid(), name: name.trim(), created: Date.now() };
-  await put("pages", p); pages.push(p); currentId = p.id; query = ""; render();
+$("newCatBtn").onclick = async () => {
+  const name = prompt("Folder name:")?.trim();
+  if (!name) return;
+  if (data.categories.includes(name)) { current = name; render(); return; }
+  if (await commit(d => { if (!d.categories.includes(name)) d.categories.push(name); }, `Add folder: ${name}`)) { current = name; render(); }
 };
 
+$("renameCatBtn").onclick = async () => {
+  const old = current;
+  const name = prompt("Rename folder:", old)?.trim();
+  if (!name || name === old) return;
+  if (data.categories.includes(name)) { toast("A folder with that name already exists"); return; }
+  if (await commit(d => {
+    d.categories = d.categories.map(c => c === old ? name : c);
+    d.links.forEach(l => { if (l.category === old) l.category = name; });
+  }, `Rename folder: ${old} → ${name}`)) { current = name; render(); }
+};
+
+$("deleteCatBtn").onclick = async () => {
+  const name = current;
+  const n = data.links.filter(l => l.category === name).length;
+  if (!confirm(`Delete folder "${name}" and its ${n} link(s) for everyone?`)) return;
+  if (await commit(d => {
+    d.categories = d.categories.filter(c => c !== name);
+    d.links = d.links.filter(l => l.category !== name);
+  }, `Delete folder: ${name}`)) { current = "__all__"; render(); }
+};
+
+$("refreshBtn").onclick = load;
+
+/* ---------------- Settings dialog ---------------- */
+function openSettings(){
+  $("sOwner").value = S.owner; $("sRepo").value = S.repo; $("sBranch").value = S.branch; $("sToken").value = S.token;
+  $("settings").showModal();
+}
+$("settingsBtn").onclick = openSettings;
+$("cancelBtn").onclick = () => $("settings").close();
+$("forgetBtn").onclick = () => { S.token = ""; saveSettings(S); $("settings").close(); toast("Token removed from this browser"); load(); };
+$("saveSettingsBtn").onclick = async () => {
+  const next = { owner: $("sOwner").value.trim(), repo: $("sRepo").value.trim(), branch: $("sBranch").value.trim() || "main", token: $("sToken").value.trim() };
+  if (!next.owner || !next.repo) { toast("Username and repository are required"); return; }
+  const prev = S; S = next;
+  if (S.token) {
+    const r = await gh("");
+    if (!r.ok) { S = prev; toast(r.status === 401 ? "That token is invalid" : "Can't access that repo with this token"); return; }
+  }
+  saveSettings(S); $("settings").close(); toast(S.token ? "Connected" : "Saved"); load();
+};
+
+/* ---------------- Theme ---------------- */
 $("themeBtn").onclick = () => {
   const root = document.documentElement;
   const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   root.dataset.theme = dark ? "light" : "dark";
-  try { localStorage.setItem("vault-theme", root.dataset.theme); } catch {}
+  try { localStorage.setItem("sap-link-vault-theme", root.dataset.theme); } catch {}
 };
-try { const t = localStorage.getItem("vault-theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+try { const t = localStorage.getItem("sap-link-vault-theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
 
-async function updateStorage(){
-  if (!navigator.storage?.estimate) return;
-  const { usage, quota } = await navigator.storage.estimate();
-  $("storageInfo").textContent = `Stored in this browser: ${fmtSize(usage || 0)} of ~${fmtSize(quota || 0)}. Export regularly to back up.`;
-}
+/* ---------------- Live-ish refresh ---------------- */
+let lastLoad = 0;
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && Date.now() - lastLoad > 30000) { lastLoad = Date.now(); load(); }
+});
 
-async function render(){ await renderPages(); await renderMain(); }
-
-/* ---------------- Boot ---------------- */
-(async () => {
-  try {
-    db = await openDB();
-    navigator.storage?.persist?.();
-    await loadPages();
-    await ensurePublishedPages();
-    currentId = pages[0].id;
-    await render(); updateStorage();
-  } catch (err) {
-    $("main").innerHTML = `<div class="empty">This browser blocked local storage (private mode?). ${esc(err.message || "")}</div>`;
-  }
-})();
+lastLoad = Date.now();
+load();
 </script>
 </body>
 </html>
