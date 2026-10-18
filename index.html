@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAP Knowledge Vault</title>
+<style>
+:root{
+  --bg:#f5f6f8;--panel:#ffffff;--ink:#1b1f24;--muted:#6a7280;--line:#e2e5ea;
+  --accent:#0a6ed1;--accent-ink:#ffffff;--soft:#e8f1fb;--danger:#c62828;--card:#ffffff;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121417;--panel:#1a1d21;--ink:#e8eaed;--muted:#9aa1ab;--line:#2a2f35;
+    --accent:#4da3ff;--accent-ink:#0b1320;--soft:#1c2a3a;--danger:#ef5350;--card:#1f2328;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121417;--panel:#1a1d21;--ink:#e8eaed;--muted:#9aa1ab;--line:#2a2f35;
+  --accent:#4da3ff;--accent-ink:#0b1320;--soft:#1c2a3a;--danger:#ef5350;--card:#1f2328;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{display:grid;grid-template-columns:250px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
+header{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font-size:17px;margin:0;font-weight:650;flex:1}
+header h1 span{color:var(--accent)}
+.btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.danger{color:var(--danger)}
+.btn.sm{padding:4px 9px;font-size:13px}
+aside{background:var(--panel);border-right:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:8px}
+aside h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:4px 6px}
+.pages{display:flex;flex-direction:column;gap:2px}
+.page-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:none;background:none;text-align:left;width:100%}
+.page-item:hover{background:var(--soft)}
+.page-item.active{background:var(--soft);color:var(--accent);font-weight:600}
+.page-item .count{margin-left:auto;font-size:12px;color:var(--muted)}
+main{padding:22px 26px;min-width:0}
+.page-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.page-head h2{margin:0;font-size:22px;flex:1;min-width:0;overflow-wrap:anywhere}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.tab{border:none;background:none;padding:9px 14px;border-bottom:2px solid transparent;color:var(--muted)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.search{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);background:var(--panel);margin-bottom:18px;transition:.15s}
+.drop.over{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+.drop strong{color:var(--ink)}
+.files{display:flex;flex-direction:column;gap:8px}
+.file{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.ext{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--soft);color:var(--accent);flex:none;text-transform:uppercase}
+.file .meta{flex:1;min-width:0}
+.file .name{font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file .sub{font-size:12px;color:var(--muted)}
+.file .actions{display:flex;gap:6px;flex-wrap:wrap}
+.linkform{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;margin-bottom:18px;background:var(--panel);padding:12px;border:1px solid var(--line);border-radius:12px}
+.linkform input{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.block{position:relative;aspect-ratio:1/1;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;transition:transform .12s,border-color .12s}
+.block:hover{transform:translateY(-2px);border-color:var(--accent)}
+.block .bar{height:4px;width:36px;border-radius:4px;background:var(--accent);margin-bottom:12px}
+.block h3{margin:0;font-size:16px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.block .note{font-size:13px;color:var(--muted);margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.block .domain{margin-top:auto;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.block a.cover{position:absolute;inset:0;border-radius:14px;z-index:1}
+.block .x{position:absolute;top:8px;right:8px;z-index:2;border:none;background:var(--bg);color:var(--muted);width:26px;height:26px;border-radius:50%;opacity:0;transition:.12s}
+.block:hover .x,.block .x:focus{opacity:1}
+.block .x:hover{color:var(--danger)}
+.badge{position:absolute;top:10px;right:10px;font-size:10px;text-transform:uppercase;letter-spacing:.05em;background:var(--soft);color:var(--accent);padding:2px 7px;border-radius:10px}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+.foot{margin-top:auto;font-size:12px;color:var(--muted);padding:6px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:10}
+.toast.show{opacity:1}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  aside{border-right:none;border-bottom:1px solid var(--line)}
+  .pages{flex-direction:row;overflow-x:auto}
+  .page-item{white-space:nowrap;width:auto}
+  .foot{display:none}
+  main{padding:16px}
+  header{padding:10px 16px;flex-wrap:wrap}
+  .linkform{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .block .x{opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>SAP <span>Knowledge Vault</span></h1>
+    <button class="btn sm" id="exportBtn" title="Download a backup of everything">Export</button>
+    <button class="btn sm" id="importBtn" title="Restore from a backup file">Import</button>
+    <button class="btn sm" id="themeBtn" title="Toggle theme">◐</button>
+    <input type="file" id="importInput" accept=".json" hidden>
+  </header>
+
+  <aside>
+    <h2>Pages</h2>
+    <div class="pages" id="pageList"></div>
+    <button class="btn primary" id="newPageBtn">+ New page</button>
+    <div class="foot" id="storageInfo"></div>
+  </aside>
+
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   PUBLISHED LINKS — edit this list in GitHub to make links visible
+   to EVERYONE who opens the site. Links added through the page UI
+   are saved only in your own browser.
+   "page" = page name (created automatically if it doesn't exist).
+   ================================================================ */
+const PUBLISHED = [
+  { page: "SAP Community", title: "SAP Community – Home", url: "https://community.sap.com/", note: "Main community hub" },
+  // { page: "SAP Community", title: "My favourite blog post", url: "https://community.sap.com/t5/...", note: "" },
+];
+
+/* ---------------- IndexedDB helpers ---------------- */
+const DB_NAME = "sap-knowledge-vault", DB_VER = 1;
+let db;
+function openDB(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      if (!d.objectStoreNames.contains("pages")) d.createObjectStore("pages", { keyPath: "id" });
+      for (const s of ["files", "links"]) {
+        if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: "id" }).createIndex("pageId", "pageId");
+      }
+    };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+const store = (s, mode = "readonly") => db.transaction(s, mode).objectStore(s);
+const wrap = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+const getAll = s => wrap(store(s).getAll());
+const put = (s, v) => wrap(store(s, "readwrite").put(v));
+const del = (s, id) => wrap(store(s, "readwrite").delete(id));
+const byPage = (s, pid) => wrap(store(s).index("pageId").getAll(pid));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+/* ---------------- Utils ---------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const fmtSize = b => b < 1024 ? b + " B" : b < 1048576 ? (b/1024).toFixed(1) + " KB" : (b/1048576).toFixed(1) + " MB";
+const fmtDate = t => new Date(t).toLocaleDateString(undefined, { day:"numeric", month:"short", year:"numeric" });
+const extOf = n => (n.includes(".") ? n.split(".").pop() : "file").slice(0, 4);
+const domainOf = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return u; } };
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200); }
+
+/* ---------------- State ---------------- */
+let pages = [], currentId = null, tab = "docs", query = "";
+try { tab = localStorage.getItem("vault-tab") || "docs"; } catch {}
+
+async function loadPages(){
+  pages = (await getAll("pages")).sort((a, b) => a.created - b.created);
+}
+
+async function ensurePublishedPages(){
+  const names = [...new Set(PUBLISHED.map(l => l.page))];
+  for (const name of names) {
+    if (!pages.some(p => p.name === name)) {
+      const p = { id: uid(), name, created: Date.now() };
+      await put("pages", p); pages.push(p);
+    }
+  }
+  if (!pages.length) {
+    const p = { id: uid(), name: "General", created: Date.now() };
+    await put("pages", p); pages.push(p);
+  }
+}
+
+/* ---------------- Sidebar ---------------- */
+async function renderPages(){
+  const list = $("pageList");
+  const counts = await Promise.all(pages.map(async p => {
+    const [f, l] = await Promise.all([byPage("files", p.id), byPage("links", p.id)]);
+    return f.length + l.length + PUBLISHED.filter(x => x.page === p.name).length;
+  }));
+  list.innerHTML = pages.map((p, i) =>
+    `<button class="page-item ${p.id === currentId ? "active" : ""}" data-id="${p.id}">
+       <span>📁</span><span>${esc(p.name)}</span><span class="count">${counts[i]}</span>
+     </button>`).join("");
+  list.querySelectorAll(".page-item").forEach(b => b.onclick = () => { currentId = b.dataset.id; query = ""; render(); });
+}
+
+/* ---------------- Main ---------------- */
+async function renderMain(){
+  const page = pages.find(p => p.id === currentId);
+  const main = $("main");
+  if (!page) { main.innerHTML = `<div class="empty">Create a page to get started.</div>`; return; }
+
+  main.innerHTML = `
+    <div class="page-head">
+      <h2>${esc(page.name)}</h2>
+      <button class="btn sm" id="renameBtn">Rename</button>
+      <button class="btn sm danger" id="deletePageBtn">Delete page</button>
+    </div>
+    <div class="tabs">
+      <button class="tab ${tab === "docs" ? "active" : ""}" data-tab="docs">Documents</button>
+      <button class="tab ${tab === "links" ? "active" : ""}" data-tab="links">SAP Links</button>
+    </div>
+    <div class="toolbar"><input class="search" id="search" placeholder="Search this page…" value="${esc(query)}"></div>
+    <div id="tabBody"></div>`;
+
+  $("renameBtn").onclick = async () => {
+    const name = prompt("Rename page:", page.name);
+    if (name && name.trim()) { page.name = name.trim(); await put("pages", page); render(); }
+  };
+  $("deletePageBtn").onclick = async () => {
+    if (!confirm(`Delete "${page.name}" and everything in it? This can't be undone.`)) return;
+    for (const s of ["files", "links"]) for (const x of await byPage(s, page.id)) await del(s, x.id);
+    await del("pages", page.id);
+    pages = pages.filter(p => p.id !== page.id);
+    currentId = pages[0]?.id || null;
+    render(); toast("Page deleted");
+  };
+  main.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+    tab = t.dataset.tab; try { localStorage.setItem("vault-tab", tab); } catch {}
+    renderMain();
+  });
+  const s = $("search");
+  s.oninput = () => { query = s.value; renderTab(page); };
+
+  renderTab(page);
+}
+
+async function renderTab(page){
+  if (tab === "docs") return renderDocs(page);
+  return renderLinks(page);
+}
+
+/* ---------------- Documents ---------------- */
+async function renderDocs(page){
+  const body = $("tabBody");
+  const q = query.toLowerCase();
+  const files = (await byPage("files", page.id))
+    .filter(f => f.name.toLowerCase().includes(q))
+    .sort((a, b) => b.added - a.added);
+
+  body.innerHTML = `
+    <label class="drop" id="drop">
+      <strong>Drop files here</strong> or click to browse<br>
+      <small>Any file type — PDF, Word, Excel, images, ZIP…</small>
+      <input type="file" id="fileInput" multiple hidden>
+    </label>
+    <div class="files">
+      ${files.length ? files.map(f => `
+        <div class="file">
+          <div class="ext">${esc(extOf(f.name))}</div>
+          <div class="meta">
+            <div class="name" title="${esc(f.name)}">${esc(f.name)}</div>
+            <div class="sub">${fmtSize(f.size)} · ${fmtDate(f.added)}</div>
+          </div>
+          <div class="actions">
+            <button class="btn sm" data-open="${f.id}">Open</button>
+            <button class="btn sm" data-dl="${f.id}">Download</button>
+            <button class="btn sm danger" data-del="${f.id}">Delete</button>
+          </div>
+        </div>`).join("") : `<div class="empty">${q ? "No documents match your search." : "No documents yet."}</div>`}
+    </div>`;
+
+  const drop = $("drop"), input = $("fileInput");
+  input.onchange = () => addFiles(page, input.files);
+  ["dragenter", "dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", ev => addFiles(page, ev.dataTransfer.files));
+
+  const find = id => files.find(f => f.id === id);
+  body.querySelectorAll("[data-open]").forEach(b => b.onclick = () => {
+    const f = find(b.dataset.open);
+    const url = URL.createObjectURL(f.blob);
+    window.open(url, "_blank", "noopener");
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  });
+  body.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => {
+    const f = find(b.dataset.dl);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(f.blob); a.download = f.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  });
+  body.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    const f = find(b.dataset.del);
+    if (!confirm(`Delete "${f.name}"?`)) return;
+    await del("files", f.id); renderDocs(page); renderPages(); updateStorage();
+  });
+}
+
+async function addFiles(page, list){
+  const arr = [...list];
+  if (!arr.length) return;
+  for (const file of arr) {
+    await put("files", { id: uid(), pageId: page.id, name: file.name, type: file.type, size: file.size, blob: file, added: Date.now() });
+  }
+  toast(`${arr.length} file${arr.length > 1 ? "s" : ""} added`);
+  renderDocs(page); renderPages(); updateStorage();
+}
+
+/* ---------------- Links ---------------- */
+async function renderLinks(page){
+  const body = $("tabBody");
+  const q = query.toLowerCase();
+  const pinned = PUBLISHED.filter(l => l.page === page.name).map((l, i) => ({ ...l, id: "pub" + i, pinned: true }));
+  const mine = (await byPage("links", page.id)).sort((a, b) => b.added - a.added);
+  const links = [...pinned, ...mine].filter(l =>
+    (l.title + " " + l.url + " " + (l.note || "")).toLowerCase().includes(q));
+
+  body.innerHTML = `
+    <form class="linkform" id="linkForm">
+      <input id="lTitle" placeholder="Title (shown on the block)" required>
+      <input id="lUrl" type="url" placeholder="https://community.sap.com/t5/..." required>
+      <input id="lNote" placeholder="Short note (optional)">
+      <button class="btn primary" type="submit">Add link</button>
+    </form>
+    <div class="grid">
+      ${links.length ? links.map(l => `
+        <div class="block">
+          <div class="bar"></div>
+          <h3>${esc(l.title)}</h3>
+          ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
+          <div class="domain">${esc(domainOf(l.url))}</div>
+          <a class="cover" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(l.title)}"></a>
+          ${l.pinned ? `<span class="badge" title="Defined in the HTML file — visible to everyone">pinned</span>`
+                     : `<button class="x" data-del="${l.id}" title="Remove link">✕</button>`}
+        </div>`).join("") : `<div class="empty">${q ? "No links match your search." : "No links yet. Add your first SAP Community blog above."}</div>`}
+    </div>`;
+
+  $("linkForm").onsubmit = async e => {
+    e.preventDefault();
+    const url = $("lUrl").value.trim();
+    if (!/^https?:\/\//i.test(url)) { toast("URL must start with http:// or https://"); return; }
+    await put("links", { id: uid(), pageId: page.id, title: $("lTitle").value.trim(), url, note: $("lNote").value.trim(), added: Date.now() });
+    toast("Link added"); renderLinks(page); renderPages();
+  };
+  body.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    if (!confirm("Remove this link?")) return;
+    await del("links", b.dataset.del); renderLinks(page); renderPages();
+  });
+}
+
+/* ---------------- Export / Import ---------------- */
+const blobToDataURL = b => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); });
+
+$("exportBtn").onclick = async () => {
+  toast("Preparing backup…");
+  const files = await getAll("files");
+  const data = {
+    app: "sap-knowledge-vault", version: 1, exported: new Date().toISOString(),
+    pages: await getAll("pages"),
+    links: await getAll("links"),
+    files: await Promise.all(files.map(async f => ({ ...f, blob: undefined, data: await blobToDataURL(f.blob) })))
+  };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: "application/json" }));
+  a.download = `vault-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+};
+
+$("importBtn").onclick = () => $("importInput").click();
+$("importInput").onchange = async e => {
+  const file = e.target.files[0]; if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    if (data.app !== "sap-knowledge-vault") throw new Error("Not a vault backup");
+    for (const p of data.pages || []) await put("pages", p);
+    for (const l of data.links || []) await put("links", l);
+    for (const f of data.files || []) {
+      const blob = await (await fetch(f.data)).blob();
+      const { data: _, ...rest } = f;
+      await put("files", { ...rest, blob });
+    }
+    await loadPages(); currentId = currentId || pages[0]?.id;
+    render(); updateStorage(); toast("Backup restored");
+  } catch (err) { toast("Import failed: " + err.message); }
+  e.target.value = "";
+};
+
+/* ---------------- New page / theme / storage ---------------- */
+$("newPageBtn").onclick = async () => {
+  const name = prompt("Page name:");
+  if (!name || !name.trim()) return;
+  const p = { id: uid(), name: name.trim(), created: Date.now() };
+  await put("pages", p); pages.push(p); currentId = p.id; query = ""; render();
+};
+
+$("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("vault-theme", root.dataset.theme); } catch {}
+};
+try { const t = localStorage.getItem("vault-theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+
+async function updateStorage(){
+  if (!navigator.storage?.estimate) return;
+  const { usage, quota } = await navigator.storage.estimate();
+  $("storageInfo").textContent = `Stored in this browser: ${fmtSize(usage || 0)} of ~${fmtSize(quota || 0)}. Export regularly to back up.`;
+}
+
+async function render(){ await renderPages(); await renderMain(); }
+
+/* ---------------- Boot ---------------- */
+(async () => {
+  try {
+    db = await openDB();
+    navigator.storage?.persist?.();
+    await loadPages();
+    await ensurePublishedPages();
+    currentId = pages[0].id;
+    await render(); updateStorage();
+  } catch (err) {
+    $("main").innerHTML = `<div class="empty">This browser blocked local storage (private mode?). ${esc(err.message || "")}</div>`;
+  }
+})();
+</script>
+</body>
+</html>
