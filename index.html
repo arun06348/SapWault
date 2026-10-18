@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SAP Knowledge Vault</title>
+<title>SAP Link Vault</title>
 <style>
 :root{
   --bg:#f5f6f8;--panel:#ffffff;--ink:#1b1f24;--muted:#6a7280;--line:#e2e5ea;
@@ -23,12 +23,12 @@
   --shadow:0 1px 2px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html,body{margin:0;min-height:100%}
 body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-button,input,textarea{font:inherit;color:inherit}
+button,input{font:inherit;color:inherit}
 button{cursor:pointer}
-.app{display:grid;grid-template-columns:250px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
-header{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
+header{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
 header h1{font-size:17px;margin:0;font-weight:650;flex:1}
 header h1 span{color:var(--accent)}
 .btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px}
@@ -46,22 +46,8 @@ aside h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(
 main{padding:22px 26px;min-width:0}
 .page-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .page-head h2{margin:0;font-size:22px;flex:1;min-width:0;overflow-wrap:anywhere}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px}
-.tab{border:none;background:none;padding:9px 14px;border-bottom:2px solid transparent;color:var(--muted)}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.search{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
-.drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);background:var(--panel);margin-bottom:18px;transition:.15s}
-.drop.over{border-color:var(--accent);background:var(--soft);color:var(--accent)}
-.drop strong{color:var(--ink)}
-.files{display:flex;flex-direction:column;gap:8px}
-.file{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:10px}
-.ext{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--soft);color:var(--accent);flex:none;text-transform:uppercase}
-.file .meta{flex:1;min-width:0}
-.file .name{font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.file .sub{font-size:12px;color:var(--muted)}
-.file .actions{display:flex;gap:6px;flex-wrap:wrap}
-.linkform{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;margin-bottom:18px;background:var(--panel);padding:12px;border:1px solid var(--line);border-radius:12px}
+.search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);margin-bottom:16px}
+.linkform{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;margin-bottom:16px;background:var(--panel);padding:12px;border:1px solid var(--line);border-radius:12px}
 .linkform input{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);min-width:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
 .block{position:relative;aspect-ratio:1/1;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;transition:transform .12s,border-color .12s}
@@ -75,7 +61,7 @@ main{padding:22px 26px;min-width:0}
 .block:hover .x,.block .x:focus{opacity:1}
 .block .x:hover{color:var(--danger)}
 .badge{position:absolute;top:10px;right:10px;font-size:10px;text-transform:uppercase;letter-spacing:.05em;background:var(--soft);color:var(--accent);padding:2px 7px;border-radius:10px}
-.empty{color:var(--muted);text-align:center;padding:40px 10px}
+.empty{color:var(--muted);text-align:center;padding:40px 10px;grid-column:1/-1}
 .foot{margin-top:auto;font-size:12px;color:var(--muted);padding:6px}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:10}
 .toast.show{opacity:1}
@@ -86,7 +72,7 @@ main{padding:22px 26px;min-width:0}
   .page-item{white-space:nowrap;width:auto}
   .foot{display:none}
   main{padding:16px}
-  header{padding:10px 16px;flex-wrap:wrap}
+  header{padding:10px 16px}
   .linkform{grid-template-columns:1fr}
   .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
   .block .x{opacity:1}
@@ -96,9 +82,9 @@ main{padding:22px 26px;min-width:0}
 <body>
 <div class="app">
   <header>
-    <h1>SAP <span>Knowledge Vault</span></h1>
-    <button class="btn sm" id="exportBtn" title="Download a backup of everything">Export</button>
-    <button class="btn sm" id="importBtn" title="Restore from a backup file">Import</button>
+    <h1>SAP <span>Link Vault</span></h1>
+    <button class="btn sm" id="exportBtn" title="Download a backup of all links">Export</button>
+    <button class="btn sm" id="importBtn" title="Restore links from a backup file">Import</button>
     <button class="btn sm" id="themeBtn" title="Toggle theme">◐</button>
     <input type="file" id="importInput" accept=".json" hidden>
   </header>
@@ -107,7 +93,7 @@ main{padding:22px 26px;min-width:0}
     <h2>Pages</h2>
     <div class="pages" id="pageList"></div>
     <button class="btn primary" id="newPageBtn">+ New page</button>
-    <div class="foot" id="storageInfo"></div>
+    <div class="foot">Saved in this browser. Click Export now and then to keep a backup.</div>
   </aside>
 
   <main id="main"></main>
@@ -116,18 +102,18 @@ main{padding:22px 26px;min-width:0}
 
 <script>
 /* ================================================================
-   PUBLISHED LINKS — edit this list in GitHub to make links visible
-   to EVERYONE who opens the site. Links added through the page UI
-   are saved only in your own browser.
+   PINNED LINKS (optional) — links typed here are part of the file
+   itself, so they show for EVERYONE and never disappear.
+   Edit this list on GitHub (pencil icon) and commit.
    "page" = page name (created automatically if it doesn't exist).
    ================================================================ */
 const PUBLISHED = [
   { page: "SAP Community", title: "SAP Community – Home", url: "https://community.sap.com/", note: "Main community hub" },
-  // { page: "SAP Community", title: "My favourite blog post", url: "https://community.sap.com/t5/...", note: "" },
+  // { page: "SAP Community", title: "My favourite blog", url: "https://community.sap.com/t5/...", note: "" },
 ];
 
-/* ---------------- IndexedDB helpers ---------------- */
-const DB_NAME = "sap-knowledge-vault", DB_VER = 1;
+/* ---------------- Browser database (IndexedDB) ---------------- */
+const DB_NAME = "sap-link-vault", DB_VER = 1;
 let db;
 function openDB(){
   return new Promise((res, rej) => {
@@ -135,9 +121,7 @@ function openDB(){
     r.onupgradeneeded = () => {
       const d = r.result;
       if (!d.objectStoreNames.contains("pages")) d.createObjectStore("pages", { keyPath: "id" });
-      for (const s of ["files", "links"]) {
-        if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: "id" }).createIndex("pageId", "pageId");
-      }
+      if (!d.objectStoreNames.contains("links")) d.createObjectStore("links", { keyPath: "id" }).createIndex("pageId", "pageId");
     };
     r.onsuccess = () => res(r.result);
     r.onerror = () => rej(r.error);
@@ -148,29 +132,22 @@ const wrap = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result);
 const getAll = s => wrap(store(s).getAll());
 const put = (s, v) => wrap(store(s, "readwrite").put(v));
 const del = (s, id) => wrap(store(s, "readwrite").delete(id));
-const byPage = (s, pid) => wrap(store(s).index("pageId").getAll(pid));
+const byPage = pid => wrap(store("links").index("pageId").getAll(pid));
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
 /* ---------------- Utils ---------------- */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-const fmtSize = b => b < 1024 ? b + " B" : b < 1048576 ? (b/1024).toFixed(1) + " KB" : (b/1048576).toFixed(1) + " MB";
-const fmtDate = t => new Date(t).toLocaleDateString(undefined, { day:"numeric", month:"short", year:"numeric" });
-const extOf = n => (n.includes(".") ? n.split(".").pop() : "file").slice(0, 4);
 const domainOf = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return u; } };
 function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200); }
 
 /* ---------------- State ---------------- */
-let pages = [], currentId = null, tab = "docs", query = "";
-try { tab = localStorage.getItem("vault-tab") || "docs"; } catch {}
+let pages = [], currentId = null, query = "";
 
-async function loadPages(){
-  pages = (await getAll("pages")).sort((a, b) => a.created - b.created);
-}
+async function loadPages(){ pages = (await getAll("pages")).sort((a, b) => a.created - b.created); }
 
-async function ensurePublishedPages(){
-  const names = [...new Set(PUBLISHED.map(l => l.page))];
-  for (const name of names) {
+async function ensurePages(){
+  for (const name of [...new Set(PUBLISHED.map(l => l.page))]) {
     if (!pages.some(p => p.name === name)) {
       const p = { id: uid(), name, created: Date.now() };
       await put("pages", p); pages.push(p);
@@ -184,20 +161,16 @@ async function ensurePublishedPages(){
 
 /* ---------------- Sidebar ---------------- */
 async function renderPages(){
-  const list = $("pageList");
-  const counts = await Promise.all(pages.map(async p => {
-    const [f, l] = await Promise.all([byPage("files", p.id), byPage("links", p.id)]);
-    return f.length + l.length + PUBLISHED.filter(x => x.page === p.name).length;
-  }));
-  list.innerHTML = pages.map((p, i) =>
+  const counts = await Promise.all(pages.map(async p => (await byPage(p.id)).length + PUBLISHED.filter(x => x.page === p.name).length));
+  $("pageList").innerHTML = pages.map((p, i) =>
     `<button class="page-item ${p.id === currentId ? "active" : ""}" data-id="${p.id}">
        <span>📁</span><span>${esc(p.name)}</span><span class="count">${counts[i]}</span>
      </button>`).join("");
-  list.querySelectorAll(".page-item").forEach(b => b.onclick = () => { currentId = b.dataset.id; query = ""; render(); });
+  $("pageList").querySelectorAll(".page-item").forEach(b => b.onclick = () => { currentId = b.dataset.id; query = ""; render(); });
 }
 
 /* ---------------- Main ---------------- */
-async function renderMain(){
+function renderMain(){
   const page = pages.find(p => p.id === currentId);
   const main = $("main");
   if (!page) { main.innerHTML = `<div class="empty">Create a page to get started.</div>`; return; }
@@ -208,164 +181,73 @@ async function renderMain(){
       <button class="btn sm" id="renameBtn">Rename</button>
       <button class="btn sm danger" id="deletePageBtn">Delete page</button>
     </div>
-    <div class="tabs">
-      <button class="tab ${tab === "docs" ? "active" : ""}" data-tab="docs">Documents</button>
-      <button class="tab ${tab === "links" ? "active" : ""}" data-tab="links">SAP Links</button>
-    </div>
-    <div class="toolbar"><input class="search" id="search" placeholder="Search this page…" value="${esc(query)}"></div>
-    <div id="tabBody"></div>`;
-
-  $("renameBtn").onclick = async () => {
-    const name = prompt("Rename page:", page.name);
-    if (name && name.trim()) { page.name = name.trim(); await put("pages", page); render(); }
-  };
-  $("deletePageBtn").onclick = async () => {
-    if (!confirm(`Delete "${page.name}" and everything in it? This can't be undone.`)) return;
-    for (const s of ["files", "links"]) for (const x of await byPage(s, page.id)) await del(s, x.id);
-    await del("pages", page.id);
-    pages = pages.filter(p => p.id !== page.id);
-    currentId = pages[0]?.id || null;
-    render(); toast("Page deleted");
-  };
-  main.querySelectorAll(".tab").forEach(t => t.onclick = () => {
-    tab = t.dataset.tab; try { localStorage.setItem("vault-tab", tab); } catch {}
-    renderMain();
-  });
-  const s = $("search");
-  s.oninput = () => { query = s.value; renderTab(page); };
-
-  renderTab(page);
-}
-
-async function renderTab(page){
-  if (tab === "docs") return renderDocs(page);
-  return renderLinks(page);
-}
-
-/* ---------------- Documents ---------------- */
-async function renderDocs(page){
-  const body = $("tabBody");
-  const q = query.toLowerCase();
-  const files = (await byPage("files", page.id))
-    .filter(f => f.name.toLowerCase().includes(q))
-    .sort((a, b) => b.added - a.added);
-
-  body.innerHTML = `
-    <label class="drop" id="drop">
-      <strong>Drop files here</strong> or click to browse<br>
-      <small>Any file type — PDF, Word, Excel, images, ZIP…</small>
-      <input type="file" id="fileInput" multiple hidden>
-    </label>
-    <div class="files">
-      ${files.length ? files.map(f => `
-        <div class="file">
-          <div class="ext">${esc(extOf(f.name))}</div>
-          <div class="meta">
-            <div class="name" title="${esc(f.name)}">${esc(f.name)}</div>
-            <div class="sub">${fmtSize(f.size)} · ${fmtDate(f.added)}</div>
-          </div>
-          <div class="actions">
-            <button class="btn sm" data-open="${f.id}">Open</button>
-            <button class="btn sm" data-dl="${f.id}">Download</button>
-            <button class="btn sm danger" data-del="${f.id}">Delete</button>
-          </div>
-        </div>`).join("") : `<div class="empty">${q ? "No documents match your search." : "No documents yet."}</div>`}
-    </div>`;
-
-  const drop = $("drop"), input = $("fileInput");
-  input.onchange = () => addFiles(page, input.files);
-  ["dragenter", "dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
-  ["dragleave", "drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
-  drop.addEventListener("drop", ev => addFiles(page, ev.dataTransfer.files));
-
-  const find = id => files.find(f => f.id === id);
-  body.querySelectorAll("[data-open]").forEach(b => b.onclick = () => {
-    const f = find(b.dataset.open);
-    const url = URL.createObjectURL(f.blob);
-    window.open(url, "_blank", "noopener");
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  });
-  body.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => {
-    const f = find(b.dataset.dl);
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(f.blob); a.download = f.name; a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-  });
-  body.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
-    const f = find(b.dataset.del);
-    if (!confirm(`Delete "${f.name}"?`)) return;
-    await del("files", f.id); renderDocs(page); renderPages(); updateStorage();
-  });
-}
-
-async function addFiles(page, list){
-  const arr = [...list];
-  if (!arr.length) return;
-  for (const file of arr) {
-    await put("files", { id: uid(), pageId: page.id, name: file.name, type: file.type, size: file.size, blob: file, added: Date.now() });
-  }
-  toast(`${arr.length} file${arr.length > 1 ? "s" : ""} added`);
-  renderDocs(page); renderPages(); updateStorage();
-}
-
-/* ---------------- Links ---------------- */
-async function renderLinks(page){
-  const body = $("tabBody");
-  const q = query.toLowerCase();
-  const pinned = PUBLISHED.filter(l => l.page === page.name).map((l, i) => ({ ...l, id: "pub" + i, pinned: true }));
-  const mine = (await byPage("links", page.id)).sort((a, b) => b.added - a.added);
-  const links = [...pinned, ...mine].filter(l =>
-    (l.title + " " + l.url + " " + (l.note || "")).toLowerCase().includes(q));
-
-  body.innerHTML = `
     <form class="linkform" id="linkForm">
       <input id="lTitle" placeholder="Title (shown on the block)" required>
       <input id="lUrl" type="url" placeholder="https://community.sap.com/t5/..." required>
       <input id="lNote" placeholder="Short note (optional)">
       <button class="btn primary" type="submit">Add link</button>
     </form>
-    <div class="grid">
-      ${links.length ? links.map(l => `
-        <div class="block">
-          <div class="bar"></div>
-          <h3>${esc(l.title)}</h3>
-          ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
-          <div class="domain">${esc(domainOf(l.url))}</div>
-          <a class="cover" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(l.title)}"></a>
-          ${l.pinned ? `<span class="badge" title="Defined in the HTML file — visible to everyone">pinned</span>`
-                     : `<button class="x" data-del="${l.id}" title="Remove link">✕</button>`}
-        </div>`).join("") : `<div class="empty">${q ? "No links match your search." : "No links yet. Add your first SAP Community blog above."}</div>`}
-    </div>`;
+    <input class="search" id="search" placeholder="Search links…" value="${esc(query)}">
+    <div class="grid" id="grid"></div>`;
 
+  $("renameBtn").onclick = async () => {
+    const name = prompt("Rename page:", page.name);
+    if (name && name.trim()) { page.name = name.trim(); await put("pages", page); render(); }
+  };
+  $("deletePageBtn").onclick = async () => {
+    if (!confirm(`Delete "${page.name}" and all its links? This can't be undone.`)) return;
+    for (const l of await byPage(page.id)) await del("links", l.id);
+    await del("pages", page.id);
+    pages = pages.filter(p => p.id !== page.id);
+    currentId = pages[0]?.id || null;
+    render(); toast("Page deleted");
+  };
   $("linkForm").onsubmit = async e => {
     e.preventDefault();
     const url = $("lUrl").value.trim();
     if (!/^https?:\/\//i.test(url)) { toast("URL must start with http:// or https://"); return; }
     await put("links", { id: uid(), pageId: page.id, title: $("lTitle").value.trim(), url, note: $("lNote").value.trim(), added: Date.now() });
-    toast("Link added"); renderLinks(page); renderPages();
+    e.target.reset(); toast("Link added"); renderGrid(page); renderPages();
   };
-  body.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+  $("search").oninput = e => { query = e.target.value; renderGrid(page); };
+
+  renderGrid(page);
+}
+
+async function renderGrid(page){
+  const q = query.toLowerCase();
+  const pinned = PUBLISHED.filter(l => l.page === page.name).map((l, i) => ({ ...l, id: "pub" + i, pinned: true }));
+  const mine = (await byPage(page.id)).sort((a, b) => b.added - a.added);
+  const links = [...pinned, ...mine].filter(l => (l.title + " " + l.url + " " + (l.note || "")).toLowerCase().includes(q));
+
+  $("grid").innerHTML = links.length ? links.map(l => `
+    <div class="block">
+      <div class="bar"></div>
+      <h3>${esc(l.title)}</h3>
+      ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
+      <div class="domain">${esc(domainOf(l.url))}</div>
+      <a class="cover" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(l.title)}"></a>
+      ${l.pinned ? `<span class="badge" title="Written inside the HTML file">pinned</span>`
+                 : `<button class="x" data-del="${l.id}" title="Remove link">✕</button>`}
+    </div>`).join("")
+    : `<div class="empty">${q ? "No links match your search." : "No links yet. Add your first SAP Community blog above."}</div>`;
+
+  $("grid").querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
     if (!confirm("Remove this link?")) return;
-    await del("links", b.dataset.del); renderLinks(page); renderPages();
+    await del("links", b.dataset.del); renderGrid(page); renderPages();
   });
 }
 
-/* ---------------- Export / Import ---------------- */
-const blobToDataURL = b => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); });
+async function render(){ await renderPages(); renderMain(); }
 
+/* ---------------- Export / Import ---------------- */
 $("exportBtn").onclick = async () => {
-  toast("Preparing backup…");
-  const files = await getAll("files");
-  const data = {
-    app: "sap-knowledge-vault", version: 1, exported: new Date().toISOString(),
-    pages: await getAll("pages"),
-    links: await getAll("links"),
-    files: await Promise.all(files.map(async f => ({ ...f, blob: undefined, data: await blobToDataURL(f.blob) })))
-  };
+  const data = { app: "sap-link-vault", version: 1, exported: new Date().toISOString(), pages: await getAll("pages"), links: await getAll("links") };
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: "application/json" }));
-  a.download = `vault-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+  a.download = `sap-links-backup-${new Date().toISOString().slice(0, 10)}.json`;
   a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast("Backup downloaded");
 };
 
 $("importBtn").onclick = () => $("importInput").click();
@@ -373,21 +255,16 @@ $("importInput").onchange = async e => {
   const file = e.target.files[0]; if (!file) return;
   try {
     const data = JSON.parse(await file.text());
-    if (data.app !== "sap-knowledge-vault") throw new Error("Not a vault backup");
-    for (const p of data.pages || []) await put("pages", p);
-    for (const l of data.links || []) await put("links", l);
-    for (const f of data.files || []) {
-      const blob = await (await fetch(f.data)).blob();
-      const { data: _, ...rest } = f;
-      await put("files", { ...rest, blob });
-    }
+    if (!Array.isArray(data.pages) || !Array.isArray(data.links)) throw new Error("Not a link backup file");
+    for (const p of data.pages) await put("pages", { id: p.id, name: p.name, created: p.created || Date.now() });
+    for (const l of data.links) await put("links", { id: l.id, pageId: l.pageId, title: l.title, url: l.url, note: l.note || "", added: l.added || Date.now() });
     await loadPages(); currentId = currentId || pages[0]?.id;
-    render(); updateStorage(); toast("Backup restored");
+    render(); toast(`Restored ${data.links.length} links`);
   } catch (err) { toast("Import failed: " + err.message); }
   e.target.value = "";
 };
 
-/* ---------------- New page / theme / storage ---------------- */
+/* ---------------- New page / theme ---------------- */
 $("newPageBtn").onclick = async () => {
   const name = prompt("Page name:");
   if (!name || !name.trim()) return;
@@ -399,29 +276,21 @@ $("themeBtn").onclick = () => {
   const root = document.documentElement;
   const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   root.dataset.theme = dark ? "light" : "dark";
-  try { localStorage.setItem("vault-theme", root.dataset.theme); } catch {}
+  try { localStorage.setItem("sap-link-vault-theme", root.dataset.theme); } catch {}
 };
-try { const t = localStorage.getItem("vault-theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+try { const t = localStorage.getItem("sap-link-vault-theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
 
-async function updateStorage(){
-  if (!navigator.storage?.estimate) return;
-  const { usage, quota } = await navigator.storage.estimate();
-  $("storageInfo").textContent = `Stored in this browser: ${fmtSize(usage || 0)} of ~${fmtSize(quota || 0)}. Export regularly to back up.`;
-}
-
-async function render(){ await renderPages(); await renderMain(); }
-
-/* ---------------- Boot ---------------- */
+/* ---------------- Start ---------------- */
 (async () => {
   try {
     db = await openDB();
     navigator.storage?.persist?.();
     await loadPages();
-    await ensurePublishedPages();
+    await ensurePages();
     currentId = pages[0].id;
-    await render(); updateStorage();
+    await render();
   } catch (err) {
-    $("main").innerHTML = `<div class="empty">This browser blocked local storage (private mode?). ${esc(err.message || "")}</div>`;
+    $("main").innerHTML = `<div class="empty">This browser blocked storage (private/incognito window?). Open the site in a normal window.</div>`;
   }
 })();
 </script>
